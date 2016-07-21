@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="progressStatus"
+            type="java.lang.Integer" />
+    </data>
+
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_horizontal_margin"
+        tools:context="com.poovarasanv.chapper.MainActivity">
+
+
+        <com.poovarasanv.chapper.widget.ProgressWheel
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp"
+            android:visibility="@{progressStatus}"
+            app:matProg_barColor="?colorPrimary"
+            app:matProg_progressIndeterminate="true" />
+    </RelativeLayout>
+</layout>

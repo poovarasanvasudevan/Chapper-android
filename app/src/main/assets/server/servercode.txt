@@ -1,0 +1,219 @@
+var app = require("express");
+var Sequelize = require('sequelize');
+var server = require("http").Server(app);
+var io = require("socket.io")(server);
+var redis = require('redis');
+var redis_socket = require('socket.io-redis');
+var pub = redis.createClient("6379", "127.0.0.1",null),
+    sub = redis.createClient("6379" ,"127.0.0.1",{ return_buffers: true });
+
+io.adapter(redis_socket({
+	host: '127.0.0.1',
+	port: 6379 ,
+	auth : null,
+	pubClient : pub,
+	subClient : sub
+}));
+var users = []
+
+var sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './db/database.sqlite'
+});
+
+
+
+var User = sequelize.define('user',{
+	firstName : {
+		type : Sequelize.STRING
+	},
+	lastName : {
+		type : Sequelize.STRING
+	},
+	phoneNumber : {
+		type : Sequelize.STRING
+	},
+	socketId : {
+		type : Sequelize.STRING
+	},
+	createdDate : {
+		type: Sequelize.DATE,
+		defaultValue: Sequelize.NOW
+	},
+	lastActive : {
+		type : Sequelize.DATE
+	},
+	activeStatus : {
+		type:Sequelize.BOOLEAN,
+		defaultValue: true
+	},
+	connectionStatus : {
+		type:Sequelize.BOOLEAN,
+		defaultValue: false
+	}
+})
+
+var Message = sequelize.define('message',{
+	fromUser : {
+		type : Sequelize.STRING
+	},
+	toUser : {
+		type : Sequelize.STRING
+	},
+	messageContent : {
+		type : Sequelize.STRING
+	},
+	messageStatus : {
+		type : Sequelize.BOOLEAN,
+		defaultValue: false
+	},
+	createdDate : {
+		type: Sequelize.DATE,
+		defaultValue: Sequelize.NOW
+	}
+})
+
+
+sequelize.sync()
+sequelize
+  .authenticate()
+  .then(function(err) {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(function (err) {
+    console.log('Unable to connect to the database:', err);
+  });
+
+var handleClient = function (socket) {
+
+	var PhoneNumber = "";
+	console.log("user connection : "+socket.id)
+    socket.emit("requestphonenumber", {user: "nodesource", text: "Hello, world!"});
+
+
+    socket.on("disconnect", function () {
+
+    	User.update({
+    		socketId: socket.id,
+    		connectionStatus : false
+    	} , {
+    		where: {socketId: socket.id}
+    	})
+        console.log("user Disconnected")
+    });
+
+    socket.on('phonenumber',function(data){
+    	socket.join(data);
+
+		PhoneNumber = data;
+
+    	User.findOne({
+    		where: {
+			    phoneNumber: data,
+			}
+    	}).then(function(user) {
+    		if(user) {
+    			user.socketId = socket.id
+    			user.connectionStatus = true
+    			user.save()
+    		} else {
+    			User.create({
+    				socketId : socket.id,
+    				phoneNumber: data,
+    				connectionStatus : true
+    			}).then(function(res) {
+    				console.log("User Created")
+    			})
+    		}
+    	})
+
+    	Message.findAll({
+    		where : {
+    			toUser : data
+    		}
+    	}).then(function(messages) {
+    		messages.forEach(function (msg) {
+    			var messageContent = {
+	    			from : msg.fromUser,
+	    			content : msg.messageContent,
+	    			messageId : msg.id,
+	    			to :  msg.toUser
+	    		}
+	    		io.sockets.in(msg.toUser).emit('newMessage', messageContent);
+            })
+    	})
+
+    	console.log("Room Created : "+data);
+    });
+
+    socket.on("camera",function(data){
+    	io.sockets.in("9789356631").emit('videodata', data);
+    })
+
+    socket.on('message',function(message) {
+    	var obj = JSON.parse(message)
+    	//console.log("message received : "+obj.user);
+    	Message.create({
+    		fromUser : PhoneNumber,
+    		toUser : obj.user,
+    		messageContent : obj.content
+    	}).then(function(message) {
+    		var messageContent = {
+    			from : message.fromUser,
+    			content : obj.content,
+    			messageId : message.id,
+    			to :  obj.user
+    		}
+    		io.sockets.in(message.toUser).emit('newMessage', messageContent);
+    	})
+
+    })
+
+    socket.on("messageAck",function(data) {
+    	Message.destroy({ where: {id: data}})
+
+    })
+
+    socket.on("typing",function(typing) {
+    	var obj = JSON.parse(typing)
+    	io.sockets.in(obj.user).emit('onTyping', "Typing...");
+    })
+
+    socket.on("status",function(status) {
+    	var obj = JSON.parse(status)
+
+    	User.update(
+    	{
+    		socketId: socket.id,
+    		connectionStatus : true,
+    		activeStatus : obj.status
+    	} ,
+    	{
+    		where: {phoneNumber: obj.user}
+    	})
+
+    	//console.log("User " + obj.user + " Is in State : "+obj.status)
+    });
+};
+
+io.on("connection", handleClient);
+
+server.listen(3000);
+
+/***
+
+Cuncurrency File Limit :
+1024 = 1024 clients
+
+sudo vim /etc/security/limits.conf
+
+*       soft    nofile  1024
+*       hard    nofile  2048
+root    soft    nofile  4096
+root    hard    nofile  8192
+user1   soft    nofile  2048
+user1   hard    nofile  2048
+
+https://www.jayway.com/2015/04/13/600k-concurrent-websocket-connections-on-aws-using-node-js/
+
+**/

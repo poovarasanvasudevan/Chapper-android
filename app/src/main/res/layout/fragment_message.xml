@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+
+        <com.poovarasanv.chapper.widget.CameraSurfaceView
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="200dp" />
+
+
+        <com.poovarasanv.chapper.widget.ReceiverSurfaceView
+            android:layout_width="match_parent"
+            android:id="@+id/receiver"
+            android:layout_margin="10dp"
+            android:layout_height="200dp" />
+    </LinearLayout>
+</layout>

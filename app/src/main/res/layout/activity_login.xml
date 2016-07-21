@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <data>
+        <variable
+            name="mobileNumberError"
+            type="java.lang.Integer"/>
+
+        <variable
+            name="licenseError"
+            type="java.lang.Integer"/>
+    </data>
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.poovarasanv.chapper.activity.LoginActivity">
+
+        <ImageView
+            android:id="@+id/logoImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/logoImage"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+
+            <EditText
+                android:id="@+id/mobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/square_hollow_bg_gray"
+                android:hint="Mobile Number"
+                android:padding="6dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:textColor="@color/md_red_400"
+                android:textStyle="bold"
+                android:visibility="@{mobileNumberError}"
+                android:text="Please Enter 10 digit Mobile Number"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/licenseBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:text="Agree License Agreement" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:textColor="@color/md_red_400"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:visibility="@{licenseError}"
+                android:text="Please accept the license agreement"
+                android:layout_height="wrap_content" />
+
+            <com.poovarasanv.chapper.widget.Ripple
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:mrl_rippleColor="@color/md_black_1000"
+                app:mrl_rippleOverlay="true">
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/loginBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?colorPrimary"
+                    android:text="Let`s Start"
+                    android:textColor="@color/md_white_1000" />
+            </com.poovarasanv.chapper.widget.Ripple>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

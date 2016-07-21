@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <com.poovarasanv.chapper.widget.Ripple
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.poovarasanv.chapper.widget.CircleImageView
+                    android:id="@+id/contact_image"
+                    android:layout_width="60dp"
+                    app:civ_border_color="#ccc"
+                    app:civ_border_width="1dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="5dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_toRightOf="@+id/contact_image"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/contact_name"
+                        android:layout_width="match_parent"
+                        android:text="Hello World"
+                        style="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="18dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/contact_number"
+                        android:text="Number"
+                        style="@style/TextAppearance.AppCompat.Medium"
+                        android:textSize="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                </LinearLayout>
+            </RelativeLayout>
+        </com.poovarasanv.chapper.widget.Ripple>
+
+    </LinearLayout>
+</layout>
