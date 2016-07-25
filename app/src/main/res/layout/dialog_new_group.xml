@@ -16,8 +16,28 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginLeft="1dp"
         android:background="@drawable/square_hollow_bg_gray"
         android:paddingLeft="5dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <com.poovarasanv.chapper.widget.CheckBox
+            android:layout_width="wrap_content"
+            android:padding="0dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="match_parent"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:text="Accept License Agreement"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 
     <com.poovarasanv.chapper.widget.Ripple
         android:layout_width="wrap_content"

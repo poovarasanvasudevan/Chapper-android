@@ -8,13 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.nkzawa.socketio.client.Socket;
 import com.poovarasanv.chapper.R;
 import com.poovarasanv.chapper.adapter.TabAdapter;
 import com.poovarasanv.chapper.app.Chapper;
 import com.poovarasanv.chapper.databinding.ActivityHomeBinding;
 import com.poovarasanv.chapper.singleton.ChapperSingleton;
-import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 
 
 import org.json.JSONException;
@@ -79,7 +79,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.search : {
+            case R.id.search: {
                 JSONObject object = new JSONObject();
                 try {
                     object.put("user", "9659359536");
@@ -88,30 +88,16 @@ public class HomeActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                ChapperSingleton.saveOutgoingMessage("9659389536","Hello 9659389536 ");
-                socket.emit("message",object.toString());
+                ChapperSingleton.saveOutgoingMessage("9659389536", "Hello 9659389536 ");
+                socket.emit("message", object.toString());
                 break;
             }
 
-            case R.id.newGroup : {
-                new LovelyCustomDialog(this)
-                        .setView(R.layout.dialog_new_group)
-                        .setTopColorRes(R.color.colorPrimary)
-                        .setIcon(R.drawable.ic_group)
-                        .configureView(v -> {
+            case R.id.newGroup: {
 
-                        })
-                        .setInstanceStateManager(new LovelyCustomDialog.InstanceStateManager() {
-                            @Override
-                            public void saveInstanceState(Bundle outState) {
-
-                            }
-
-                            @Override
-                            public void restoreInstanceState(Bundle savedState) {
-
-                            }
-                        })
+                new MaterialDialog.Builder(this)
+                        .title("New Group")
+                        .customView(R.layout.dialog_new_group, true)
                         .show();
 
                 break;
