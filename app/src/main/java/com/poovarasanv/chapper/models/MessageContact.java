@@ -1,30 +1,24 @@
 package com.poovarasanv.chapper.models;
 
 /**
- * Created by poovarasanv on 15/7/16.
+ * Created by poovarasanv on 25/7/16.
  */
-public class Contact {
+public class MessageContact {
     long id;
     String name;
     String number;
     String image;
+    String message;
 
-    public Contact() {
+    public MessageContact() {
     }
 
-    public Contact(long id, String name, String number, String image) {
+    public MessageContact(long id, String name, String number, String image, String message) {
         this.id = id;
         this.name = name;
         this.number = number;
         this.image = image;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
+        this.message = message;
     }
 
     public long getId() {
@@ -49,5 +43,21 @@ public class Contact {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

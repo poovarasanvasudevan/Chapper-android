@@ -18,36 +18,53 @@
                 <com.poovarasanv.chapper.widget.CircleImageView
                     android:id="@+id/contact_image"
                     android:layout_width="60dp"
-                    app:civ_border_color="#ccc"
-                    app:civ_border_width="1dp"
                     android:layout_height="60dp"
-                    android:layout_margin="5dp" />
+                    android:layout_margin="5dp"
+                    app:civ_border_color="#ccc"
+                    app:civ_border_width="1dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
                     android:layout_toRightOf="@+id/contact_image"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
                     <TextView
                         android:id="@+id/contact_name"
-                        android:layout_width="match_parent"
-                        android:text="Hello World"
                         style="@style/TextAppearance.AppCompat.Body2"
-                        android:textSize="18dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="Hello World"
+                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/contact_number"
-                        android:text="Number"
                         style="@style/TextAppearance.AppCompat.Medium"
-                        android:textSize="15dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="Number"
+                        android:textSize="15dp" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/inivite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/md_green_500"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:text="Invite"
+                    android:layout_marginRight="15dp"
+                    android:textColor="#fff"
+                    android:textStyle="bold" />
             </RelativeLayout>
         </com.poovarasanv.chapper.widget.Ripple>
 

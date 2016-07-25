@@ -4,20 +4,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:orientation="vertical">
 
-
-        <com.poovarasanv.chapper.widget.CameraSurfaceView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/messageUser"
             android:layout_width="match_parent"
-            android:layout_margin="10dp"
-            android:layout_height="200dp" />
+            android:layout_height="match_parent" />
 
-
-        <com.poovarasanv.chapper.widget.ReceiverSurfaceView
-            android:layout_width="match_parent"
-            android:id="@+id/receiver"
-            android:layout_margin="10dp"
-            android:layout_height="200dp" />
     </LinearLayout>
 </layout>

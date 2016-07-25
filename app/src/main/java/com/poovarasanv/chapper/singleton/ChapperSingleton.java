@@ -5,11 +5,13 @@ import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -20,16 +22,19 @@ import com.github.nkzawa.socketio.client.Socket;
 import com.poovarasanv.chapper.R;
 import com.poovarasanv.chapper.activity.HomeActivity;
 import com.poovarasanv.chapper.models.Contact;
+import com.poovarasanv.chapper.models.MessageContact;
 import com.poovarasanv.chapper.pojo.Message;
 import com.poovarasanv.chapper.receivers.NotificationDismissedReceiver;
 import com.sromku.simple.storage.SimpleStorage;
 import com.sromku.simple.storage.SimpleStorageConfiguration;
 import com.sromku.simple.storage.Storage;
+import com.sromku.simple.storage.helpers.OrderType;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
@@ -58,7 +63,7 @@ public class ChapperSingleton {
     public static Socket getSocket(Context context) {
         if (socket == null) {
             try {
-                socket = IO.socket("http://10.0.2.2:3000");
+                socket = IO.socket("http://10.0.2.2:3001");
 
                 Log.i("Request Socket", "Sending Request");
                 if (socket.connected() == false) {
@@ -111,10 +116,10 @@ public class ChapperSingleton {
         socket = getSocket(context);
 
 
-        if (Prefs.with(context).contains("phonenumber")) {
+        if (!getNumber().equals("")) {
             JSONObject object = new JSONObject();
             try {
-                object.put("user", Prefs.with(context).read("phonenumber"));
+                object.put("user", getNumber());
                 object.put("status", false);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -132,10 +137,10 @@ public class ChapperSingleton {
         socket = getSocket(context);
 
 
-        if (Prefs.with(context).contains("phonenumber")) {
+        if (!getNumber().equals("")) {
             JSONObject object = new JSONObject();
             try {
-                object.put("user", Prefs.with(context).read("phonenumber"));
+                object.put("user", getNumber());
                 object.put("status", true);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -342,16 +347,15 @@ public class ChapperSingleton {
         }
     }
 
-    public static Notification getNotification(String title,String message) {
+    public static Notification getNotification(String title, String message) {
         int icon = R.drawable.logo;
-
 
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         context,
                         0,
-                        new Intent(context.getApplicationContext(),HomeActivity.class),
+                        new Intent(context.getApplicationContext(), HomeActivity.class),
                         PendingIntent.FLAG_CANCEL_CURRENT
                 );
 
@@ -363,7 +367,7 @@ public class ChapperSingleton {
                 .setContentIntent(resultPendingIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setDeleteIntent(createOnDismissedIntent(context,9789))
+                .setDeleteIntent(createOnDismissedIntent(context, 9789))
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.logo))
                 .setContentText(message).build();
 
@@ -382,5 +386,99 @@ public class ChapperSingleton {
                 PendingIntent.getBroadcast(context.getApplicationContext(),
                         notificationId, intent, 0);
         return pendingIntent;
+    }
+
+    public static String getContactName(String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME}, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactName = null;
+        if (cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+        }
+
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return contactName;
+    }
+
+    public static boolean contactExists(String number) {
+
+        Uri lookupUri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(number));
+        String[] mPhoneNumberProjection = {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+        Cursor cur = context.getContentResolver().query(lookupUri, mPhoneNumberProjection, null, null, null);
+        try {
+            if (cur.moveToFirst()) {
+                return true;
+            }
+        } finally {
+            if (cur != null)
+                cur.close();
+        }
+        return false;
+    }
+
+    public static String getContactImage(String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri, new String[]{ContactsContract.PhoneLookup.PHOTO_URI}, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactName = null;
+        if (cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.PHOTO_URI));
+        }
+
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return contactName;
+    }
+
+    public static List<MessageContact> getAllMessageUser() {
+        List<MessageContact> messageUser = new ArrayList<>();
+        List<File> allUser = storage.getFiles("Chapper/data/messages", OrderType.DATE);
+
+        for (File f : allUser) {
+            MessageContact c = new MessageContact();
+            c.setName(getContactName(f.getName().replace(".txt", "")));
+            c.setNumber(f.getName().replace(".txt", ""));
+            c.setImage(getContactImage(f.getName()));
+            List<Message> messages = getAllMessages(f.getName().replace(".txt", ""));
+            c.setMessage(messages.get(messages.size() - 1).getMessage().length() > 50 ? messages.get(messages.size() - 1).getMessage().substring(0, 45) + "..." : messages.get(messages.size() - 1).getMessage());
+            messageUser.add(c);
+        }
+
+        return messageUser;
+    }
+
+    public static void saveActiveUsers(JSONArray array) {
+        JSONArray contactString = new JSONArray();
+        try {
+            for (int i = 0; i < array.length(); i++) {
+                String number = array.get(i).toString();
+                if (contactExists(number)) {
+                    contactString.put(number);
+                }
+            }
+
+            if (getStorage().isFileExist("Chapper/data", "users.txt")) {
+                getStorage().deleteFile("Chapper/data", "users.txt");
+            }
+            getStorage().createFile("Chapper/data", "users.txt", contactString.toString());
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

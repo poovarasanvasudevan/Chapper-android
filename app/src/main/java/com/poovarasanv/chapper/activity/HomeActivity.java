@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.github.nkzawa.socketio.client.Socket;
 import com.poovarasanv.chapper.R;
@@ -13,6 +14,7 @@ import com.poovarasanv.chapper.adapter.TabAdapter;
 import com.poovarasanv.chapper.app.Chapper;
 import com.poovarasanv.chapper.databinding.ActivityHomeBinding;
 import com.poovarasanv.chapper.singleton.ChapperSingleton;
+import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 
 
 import org.json.JSONException;
@@ -88,6 +90,30 @@ public class HomeActivity extends AppCompatActivity {
 
                 ChapperSingleton.saveOutgoingMessage("9659389536","Hello 9659389536 ");
                 socket.emit("message",object.toString());
+                break;
+            }
+
+            case R.id.newGroup : {
+                new LovelyCustomDialog(this)
+                        .setView(R.layout.dialog_new_group)
+                        .setTopColorRes(R.color.colorPrimary)
+                        .setIcon(R.drawable.ic_group)
+                        .configureView(v -> {
+
+                        })
+                        .setInstanceStateManager(new LovelyCustomDialog.InstanceStateManager() {
+                            @Override
+                            public void saveInstanceState(Bundle outState) {
+
+                            }
+
+                            @Override
+                            public void restoreInstanceState(Bundle savedState) {
+
+                            }
+                        })
+                        .show();
+
                 break;
             }
         }

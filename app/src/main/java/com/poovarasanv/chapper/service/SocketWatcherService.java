@@ -18,6 +18,7 @@ import com.poovarasanv.chapper.pojo.Message;
 import com.poovarasanv.chapper.singleton.ChapperSingleton;
 import com.poovarasanv.chapper.singleton.Prefs;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +45,7 @@ public class SocketWatcherService extends Service {
         socket = ChapperSingleton.getSocket(getApplicationContext());
         socket.on("requestphonenumber", requestPhoneNumberListener);
         socket.on("newMessage", onMessageListener);
+        socket.on("allUsers", onAllUserListener);
 
         Log.i("Socket", "Socket Connected...");
 
@@ -64,8 +66,22 @@ public class SocketWatcherService extends Service {
         }
     };
 
+    private Emitter.Listener onAllUserListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                public void run() {
+                    try {
+                        ChapperSingleton.saveActiveUsers(new JSONArray(args[0].toString()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(getApplicationContext(), "Contact Refreshed", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-
+        }
+    };
 
 
     private Emitter.Listener onMessageListener = new Emitter.Listener() {

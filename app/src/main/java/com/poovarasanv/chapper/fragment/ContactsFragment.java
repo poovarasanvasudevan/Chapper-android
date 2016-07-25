@@ -22,11 +22,7 @@ import com.poovarasanv.chapper.singleton.ChapperSingleton;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+
 
 /**
  * Created by poovarasanv on 15/7/16.
@@ -64,7 +60,6 @@ public class ContactsFragment extends Fragment {
             }
         });
 
-        fragmentContactsBinding.fastScroller.setRecyclerView(fragmentContactsBinding.allContacts);
         return fragmentContactsBinding.getRoot();
     }
 
