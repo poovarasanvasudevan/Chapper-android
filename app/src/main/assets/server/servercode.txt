@@ -73,6 +73,43 @@ var Message = sequelize.define('message',{
 	}
 })
 
+var Group = sequelize.define('group',{
+	groupName : {
+		type : Sequelize.STRING
+	},
+	groupTag : {
+		type : Sequelize.STRING
+	},
+	createdDate : {
+		type: Sequelize.DATE,
+		defaultValue: Sequelize.NOW
+	}
+})
+
+var UserGroup = sequelize.define('user_group',{
+	id:{
+        type:Sequelize.INTEGER,
+        primaryKey:true,
+        autoIncrement:true
+    }
+})
+
+User.belongsToMany(Group,{
+	as : 'Groups',
+	through : {
+		model : UserGroup,
+		unique : false
+	},
+	foreignKey:'user_id'
+})
+Group.belongsToMany(User,{
+	as : "Users",
+	through : {
+		model : UserGroup,
+		unique : false
+	},
+	foreignKey:'group_id'
+})
 
 sequelize.sync()
 sequelize
@@ -87,6 +124,7 @@ sequelize
 var handleClient = function (socket) {
 
 	var PhoneNumber = "";
+
 	console.log("user connection : "+socket.id)
     socket.emit("requestphonenumber", {user: "nodesource", text: "Hello, world!"});
 
@@ -103,6 +141,7 @@ var handleClient = function (socket) {
     });
 
     socket.on('phonenumber',function(data){
+
     	socket.join(data);
 
 		PhoneNumber = data;
@@ -127,6 +166,8 @@ var handleClient = function (socket) {
     		}
     	})
 
+
+
     	Message.findAll({
     		where : {
     			toUser : data
@@ -143,8 +184,35 @@ var handleClient = function (socket) {
             })
     	})
 
+
     	console.log("Room Created : "+data);
+
+
+
+
+    	User.findAll().then(function(users1) {
+    		var allUsers = []
+    		users1.forEach(function(user1){
+    			allUsers.push(user1.phoneNumber)
+    		})
+    		console.log("User : "+allUsers.length)
+    		io.sockets.in(data).emit('allUsers', JSON.stringify(allUsers));
+    	})
+
+
     });
+
+    socket.on('getAllUsers',function(data) {
+
+    	var allUsers = []
+    	User.findAll().then(function(users) {
+    		users.forEach(function(user){
+    			allUsers.push(user.phoneNumber)
+    		})
+    	})
+
+    	socket.emit('allUsers', allUsers);
+    })
 
     socket.on("camera",function(data){
     	io.sockets.in("9789356631").emit('videodata', data);
@@ -198,7 +266,7 @@ var handleClient = function (socket) {
 
 io.on("connection", handleClient);
 
-server.listen(3000);
+server.listen(3001);
 
 /***
 
