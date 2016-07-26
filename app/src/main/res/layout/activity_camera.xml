@@ -6,10 +6,41 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <SurfaceView
+
+        <TextureView
+            android:id="@+id/cameraSurface"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_alignParentTop="true"
+            android:alpha="0.45"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <RelativeLayout
+            android:id="@+id/zoomLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottomBar"
+            android:layout_margin="20dp"
+            android:background="@color/colorPrimary"
+            android:padding="10dp"
+            android:visibility="invisible">
+
+            <com.poovarasanv.chapper.widget.SeekBarCompat
+                android:layout_width="match_parent"
+                android:id="@+id/zoomSeekBar"
+                app:thumbColor="@color/md_white_1000"
+                app:progressColor="@color/md_white_1000"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/bottomBar"
@@ -18,16 +49,61 @@
             android:layout_alignParentBottom="true"
             android:background="@color/colorPrimary">
 
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                app:rippleColor="@color/colorPrimaryDark"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_camera"
-                app:backgroundTint="@color/md_green_500"
-                app:fabSize="normal" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/zoomIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_zoom_in" />
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_camera_front" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/captureBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_camera"
+                    app:backgroundTint="@color/md_green_500"
+                    app:fabSize="normal"
+                    app:rippleColor="@color/colorPrimaryDark" />
+
+                <ImageButton
+                    android:id="@+id/flashBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_flash_on" />
+
+                <ImageButton
+                    android:id="@+id/zoomOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_zoom_out" />
+
+
+            </LinearLayout>
 
 
         </RelativeLayout>

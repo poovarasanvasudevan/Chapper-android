@@ -37,7 +37,14 @@
         <attr name="checkbox_checked_color" format="color"/>
     </declare-styleable>
 
+    <declare-styleable name="SeekBarCompat">
+        <attr name="thumbColor" format="color" />
+        <attr name="progressColor" format="color"/>
+        <attr name="progressBackgroundColor" format="color"/>
+        <attr name="thumbAlpha" format="float"/>
+    </declare-styleable>
 
+    <dimen name="one_dp">1sp</dimen>
 
 
     <!-- CheckBox Default -->
