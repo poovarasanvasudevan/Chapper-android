@@ -73,6 +73,14 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
+        activityMessageBinding.cameraBtn.setOnClickListener(view -> {
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            this, view, "DetailActivity:image");
+            Intent intent = new Intent(this, CameraActivity.class);
+            ActivityCompat.startActivity(this, intent, options.toBundle());
+
+        });
         activityMessageBinding.toolBarBackBtn.setOnClickListener(view -> {
             finish();
         });
