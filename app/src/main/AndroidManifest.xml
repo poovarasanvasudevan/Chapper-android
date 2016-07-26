@@ -62,7 +62,10 @@
         <activity
             android:name=".activity.HomeActivity"
             android:theme="@style/AppThemeNoBar" />
-        <activity android:name=".activity.MessageActivity"></activity>
+        <activity
+            android:name=".activity.MessageActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppThemeNoBar"></activity>
     </application>
 
 </manifest>

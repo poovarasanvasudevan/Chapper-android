@@ -27,7 +27,11 @@ android {
         enabled = true
     }
 }
-
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -41,8 +45,8 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
     compile 'com.sromku:simple-storage:1.2.0'
-    compile 'com.yarolegovich:lovely-dialog:1.0.4'
     compile 'com.afollestad.material-dialogs:core:0.8.6.2'
+    compile 'com.github.ozodrukh:CircularReveal:1.1.0'
 }
 retrolambda {
     jvmArgs '-noverify'
