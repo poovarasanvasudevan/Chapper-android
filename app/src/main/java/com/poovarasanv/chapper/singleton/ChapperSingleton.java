@@ -15,6 +15,7 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -48,6 +49,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+
+import iBoxDB.LocalServer.DB;
 
 /**
  * Created by poovarasanv on 14/7/16.
@@ -100,8 +103,8 @@ public class ChapperSingleton {
 
         final Path path = new Path();
         path.addCircle(
-                (float)(width / 2)
-                , (float)(height / 2)
+                (float) (width / 2)
+                , (float) (height / 2)
                 , (float) Math.min(width, (height / 2))
                 , Path.Direction.CCW);
 
@@ -183,10 +186,12 @@ public class ChapperSingleton {
             if (SimpleStorage.isExternalStorageWritable()) {
                 storage = SimpleStorage.getExternalStorage();
                 storage.createDirectory("Chapper/data/messages");
+                storage.createDirectory("Chapper/data/db");
 
             } else {
                 storage = SimpleStorage.getInternalStorage(context);
                 storage.createDirectory("Chapper/data/messages");
+                storage.createDirectory("Chapper/data/db");
 
 
             }
@@ -195,6 +200,15 @@ public class ChapperSingleton {
         return storage;
     }
 
+    public static void initAndroid() {
+        String path = "";
+        if (SimpleStorage.isExternalStorageWritable()) {
+            path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Chapper/data/db";
+        } else {
+            path = Environment.getDataDirectory().getAbsolutePath() + "/Chapper/data/db";
+        }
+        DB.root(path);
+    }
 
     public static void writeLogin(String phoneNumber) {
 
@@ -348,7 +362,7 @@ public class ChapperSingleton {
                     message.setToUser(to);
                     message.setFromUser(obj.optString("from"));
                     message.setMessage(obj.optString("content"));
-                    message.setMessageId(obj.optInt("messageId"));
+                    message.setID(obj.optInt("messageId"));
                     message.setStatus(obj.optBoolean("status"));
 
                     message.setCreatedAt(parseDate(obj.optString("date")));

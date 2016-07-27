@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by poovarasanv on 19/7/16.
  */
 public class Message implements Comparable<Message> {
-    int messageId;
+    long ID;
     String fromUser;
     String toUser;
     String message;
@@ -17,8 +17,8 @@ public class Message implements Comparable<Message> {
     public Message() {
     }
 
-    public Message(int messageId, String fromUser, String toUser, String message, Date createdAt, boolean status) {
-        this.messageId = messageId;
+    public Message(long ID, String fromUser, String toUser, String message, Date createdAt, boolean status) {
+        this.ID = ID;
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.message = message;
@@ -26,12 +26,12 @@ public class Message implements Comparable<Message> {
         this.status = status;
     }
 
-    public int getMessageId() {
-        return messageId;
+    public long getID() {
+        return ID;
     }
 
-    public void setMessageId(int messageId) {
-        this.messageId = messageId;
+    public void setID(long ID) {
+        this.ID = ID;
     }
 
     public String getFromUser() {
@@ -77,9 +77,9 @@ public class Message implements Comparable<Message> {
 
     @Override
     public int compareTo(Message message) {
-        if (this.getMessageId() == message.getMessageId())
+        if (this.getID() == message.getID())
             return 0;
-        else if (this.getMessageId() > message.getMessageId())
+        else if (this.getID() > message.getID())
             return -1;
         else
             return 1;

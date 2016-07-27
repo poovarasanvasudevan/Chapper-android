@@ -73,6 +73,9 @@
             android:name=".activity.SettingsActivity"
             android:label="Settings"
             android:theme="@style/AppThemeNoBar" />
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:theme="@style/AppThemeNoBar"></activity>
     </application>
 
 </manifest>

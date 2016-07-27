@@ -14,6 +14,8 @@ import com.poovarasanv.chapper.singleton.ChapperSingleton;
 import com.sromku.simple.storage.SimpleStorage;
 import com.sromku.simple.storage.SimpleStorageConfiguration;
 
+import iBoxDB.LocalServer.DB;
+
 /**
  * Created by poovarasanv on 14/7/16.
  */
@@ -23,7 +25,6 @@ public class Chapper extends Application {
     Socket socket;
 
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,7 +32,7 @@ public class Chapper extends Application {
 
         ChapperSingleton.init(getApplicationContext());
 
-
+        ChapperSingleton.initAndroid();
 
 
         //ChapperSingleton.setOnline();
@@ -45,7 +46,6 @@ public class Chapper extends Application {
 
         Log.d("fghgf", "hfghgf");
     }
-
 
 
     @Override

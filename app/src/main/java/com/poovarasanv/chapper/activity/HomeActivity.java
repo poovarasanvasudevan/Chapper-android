@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,11 +18,19 @@ import com.poovarasanv.chapper.R;
 import com.poovarasanv.chapper.adapter.TabAdapter;
 import com.poovarasanv.chapper.app.Chapper;
 import com.poovarasanv.chapper.databinding.ActivityHomeBinding;
+import com.poovarasanv.chapper.pojo.Message;
 import com.poovarasanv.chapper.singleton.ChapperSingleton;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
+
+import iBoxDB.LocalServer.AutoBox;
+import iBoxDB.LocalServer.Box;
+import iBoxDB.LocalServer.CommitResult;
+import iBoxDB.LocalServer.DB;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -70,6 +79,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         activityHomeBinding.viewpager.setOffscreenPageLimit(3);
+
+//        DB db = new DB(1);
+//        db.getConfig().ensureTable("Message", Message.class, "ID");
+//        DB.AutoBox box = db.open();
+//        //box.insert("Message",new Message(1,"9789356631","9789356631","",new Date(),true));
+//        Message o1 = box.get(Message.class, "Message", Long.parseLong("1"));
+//
+//        Log.i("Message-123",o1.getFromUser());
+
     }
 
     @Override
