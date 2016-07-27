@@ -24,8 +24,6 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * Created by poovarasanv on 14/7/16.
  */

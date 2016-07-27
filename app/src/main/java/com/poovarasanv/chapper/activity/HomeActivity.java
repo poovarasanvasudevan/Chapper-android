@@ -1,7 +1,10 @@
 package com.poovarasanv.chapper.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -99,6 +102,16 @@ public class HomeActivity extends AppCompatActivity {
                         .title("New Group")
                         .customView(R.layout.dialog_new_group, true)
                         .show();
+
+                break;
+            }
+
+            case R.id.settings: {
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                this, item.getActionView(), "DetailActivity:image");
+                Intent intent = new Intent(this, SettingsActivity.class);
+                ActivityCompat.startActivity(this, intent, options.toBundle());
 
                 break;
             }

@@ -90,15 +90,18 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
-
         <io.codetail.widget.RevealFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/appbar">
 
-            <android.support.v7.widget.CardView
+            <LinearLayout
                 android:id="@+id/reveal"
                 android:layout_width="match_parent"
+                android:background="@drawable/shadow_125025"
+                android:layout_marginLeft="-4dp"
+                android:layout_marginRight="-4dp"
+                android:layout_marginTop="-4dp"
                 android:layout_height="wrap_content">
 
                 <LinearLayout
@@ -167,48 +170,49 @@
 
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </LinearLayout>
         </io.codetail.widget.RevealFrameLayout>
-
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:reverseLayout="true"
             android:layout_above="@+id/messageBar"
             android:layout_below="@+id/appbar" />
 
         <RelativeLayout
             android:id="@+id/messageBar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true">
+            android:layout_height="55dp"
+            android:layout_marginLeft="-4dp"
+            android:layout_marginRight="-4dp"
+            android:layout_marginBottom="-4dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/shadow_125025">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/md_white_1000"
-                android:orientation="vertical">
+                android:layout_toLeftOf="@+id/sendBtnRipple">
 
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@drawable/elevation" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                     <com.poovarasanv.chapper.widget.Ripple
-                        android:id="@+id/emoji"
+                        android:id="@+id/rippleEmoji"
                         android:layout_width="50dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
+                        android:layout_weight="1"
                         app:mrl_rippleColor="#000"
                         app:mrl_rippleOverlay="true">
 
                         <ImageButton
+                            android:id="@+id/emoji"
+                            android:tint="?colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
@@ -216,22 +220,23 @@
 
                     </com.poovarasanv.chapper.widget.Ripple>
 
-                    <EditText
+
+                    <com.vanniktech.emoji.EmojiEditText
                         android:id="@+id/messageText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_toLeftOf="@+id/cameraBtn"
-                        android:layout_toRightOf="@+id/emoji"
+                        android:layout_toRightOf="@+id/rippleEmoji"
                         android:background="@null"
                         android:hint="Message here..."
-                        android:paddingLeft="5dp" />
-
+                        android:paddingLeft="5dp"
+                        app:emojiSize="26sp" />
 
                     <com.poovarasanv.chapper.widget.Ripple
                         android:id="@+id/cameraBtn"
                         android:layout_width="50dp"
                         android:layout_height="match_parent"
-                        android:layout_toLeftOf="@+id/sendBtn"
+                        android:layout_alignParentRight="true"
                         app:mrl_rippleColor="#000"
                         app:mrl_rippleOverlay="true">
 
@@ -243,24 +248,28 @@
 
                     </com.poovarasanv.chapper.widget.Ripple>
 
-                    <com.poovarasanv.chapper.widget.Ripple
-                        android:id="@+id/sendBtn"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        app:mrl_rippleColor="#000"
-                        app:mrl_rippleOverlay="true">
-
-                        <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            android:src="@drawable/ic_send" />
-
-                    </com.poovarasanv.chapper.widget.Ripple>
-
                 </RelativeLayout>
-            </LinearLayout>
+            </RelativeLayout>
+
+
+            <com.poovarasanv.chapper.widget.Ripple
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/sendBtnRipple"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                app:mrl_rippleColor="#000"
+                app:mrl_rippleOverlay="true">
+
+                <ImageButton
+                    android:id="@+id/sendBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_mic"
+                    android:tint="?colorPrimary" />
+            </com.poovarasanv.chapper.widget.Ripple>
         </RelativeLayout>
     </RelativeLayout>
 </layout>

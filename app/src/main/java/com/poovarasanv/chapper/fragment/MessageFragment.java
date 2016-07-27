@@ -34,7 +34,6 @@ import com.poovarasanv.chapper.util.RecyclerItemClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;

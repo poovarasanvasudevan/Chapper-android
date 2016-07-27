@@ -19,7 +19,7 @@
             android:layout_height="?actionBarSize"
             android:layout_alignParentTop="true"
             android:alpha="0.45"
-            android:background="@color/colorPrimary"
+            android:background="@color/md_black_1000"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 

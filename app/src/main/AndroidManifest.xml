@@ -62,14 +62,17 @@
         <activity
             android:name=".activity.HomeActivity"
             android:theme="@style/AppThemeNoBar" />
-
         <activity
             android:name=".activity.CameraActivity"
             android:theme="@style/AppThemeNoBar" />
         <activity
             android:name=".activity.MessageActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppThemeNoBar"></activity>
+            android:theme="@style/AppThemeNoBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="Settings"
+            android:theme="@style/AppThemeNoBar" />
     </application>
 
 </manifest>

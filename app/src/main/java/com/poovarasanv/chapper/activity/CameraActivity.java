@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -47,11 +48,8 @@ public class CameraActivity extends AppCompatActivity {
 
         setSupportActionBar(activityCameraBinding.toolbar);
 
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
 
 
         activityCameraBinding.zoomSeekBar.setMax(5);
@@ -113,6 +111,9 @@ public class CameraActivity extends AppCompatActivity {
                         public void call(RxCameraData rxCameraData) {
                             String path = Environment.getExternalStorageDirectory() + "/test.jpg";
                             File file = new File(path);
+
+                            Log.i("Camera Bytes : ", (rxCameraData.cameraData.length) + "");
+
                             Bitmap bitmap = BitmapFactory.decodeByteArray(rxCameraData.cameraData, 0, rxCameraData.cameraData.length);
                             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(),
                                     rxCameraData.rotateMatrix, false);
@@ -178,6 +179,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         camera.closeCamera();
+        CLICKED = false;
         finish();
         super.onBackPressed();
     }
@@ -185,6 +187,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         camera.closeCamera();
+        CLICKED = false;
         super.onDestroy();
     }
 }
