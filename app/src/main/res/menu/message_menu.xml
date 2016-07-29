@@ -2,8 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menuCall"
+        android:icon="@drawable/ic_call_white"
+        android:title="Call"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_clip"
         android:icon="@drawable/ic_apps"
         android:title="Media"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+
+
 </menu>

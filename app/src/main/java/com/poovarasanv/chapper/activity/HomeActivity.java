@@ -133,6 +133,16 @@ public class HomeActivity extends AppCompatActivity {
 
                 break;
             }
+
+            case R.id.help: {
+
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                this, item.getActionView(), "DetailActivity:image");
+                Intent intent = new Intent(this, UserLocationActivity.class);
+                ActivityCompat.startActivity(this, intent, options.toBundle());
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

@@ -41,27 +41,38 @@ public class CameraActivity extends AppCompatActivity {
     public static boolean CLICKED = false;
     RxCamera camera;
     RxCameraConfig config;
-
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        activityCameraBinding = DataBindingUtil.setContentView(this, R.layout.activity_camera);
-
-        setSupportActionBar(activityCameraBinding.toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    boolean isBack = true;
 
 
-        activityCameraBinding.zoomSeekBar.setMax(5);
-        config = RxCameraConfigChooser.obtain().
-                useBackCamera().
-                setAutoFocus(true).
-                setPreferPreviewFrameRate(15, 30).
-                setPreferPreviewSize(new Point(640, 480), true).
-                setHandleSurfaceEvent(true).
-                get();
+    private RxCameraConfig getRxCameraConfig(int config2) {
+        config = null;
+        if (config2 == 1) {
+            config = RxCameraConfigChooser.obtain().
+                    useBackCamera().
+                    setAutoFocus(true).
+                    setPreferPreviewFrameRate(15, 30).
+                    setPreferPreviewSize(new Point(640, 480), true).
+                    setHandleSurfaceEvent(true).
+                    get();
+        } else {
+            config = RxCameraConfigChooser.obtain().
+                    useFrontCamera().
+                    setAutoFocus(true).
+                    setPreferPreviewFrameRate(15, 30).
+                    setPreferPreviewSize(new Point(640, 480), true).
+                    setHandleSurfaceEvent(true).
+                    get();
+        }
 
-        RxCamera.open(this, config).flatMap(rxCamera -> {
+        return config;
+    }
+
+    private void openCamera(int camMode) {
+
+        if (camera != null)
+            camera.closeCamera();
+
+        RxCamera.open(this, getRxCameraConfig(camMode)).flatMap(rxCamera -> {
 
             camera = rxCamera;
             return rxCamera.bindTexture(activityCameraBinding.cameraSurface);
@@ -81,9 +92,33 @@ public class CameraActivity extends AppCompatActivity {
                         camera = rxCamera;
                     }
                 });
+    }
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activityCameraBinding = DataBindingUtil.setContentView(this, R.layout.activity_camera);
+
+        setSupportActionBar(activityCameraBinding.toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+        activityCameraBinding.zoomSeekBar.setMax(5);
+
+        openCamera(1);
 
         camera.action().flashAction(true);
 
+        activityCameraBinding.camChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isBack)
+                    openCamera(2);
+                else
+                    openCamera(1);
+            }
+        });
         activityCameraBinding.flashBtn.setOnClickListener(view -> {
             if (FLASH) {
                 FLASH = false;

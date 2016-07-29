@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.kennyc.bottomsheet.BottomSheet;
+import com.kennyc.bottomsheet.BottomSheetListener;
 import com.poovarasanv.chapper.R;
 import com.poovarasanv.chapper.databinding.ActivityMessageBinding;
 import com.poovarasanv.chapper.singleton.ChapperSingleton;
@@ -32,18 +36,11 @@ import com.vanniktech.emoji.listeners.OnEmojiPopupShownListener;
 import com.vanniktech.emoji.listeners.OnSoftKeyboardCloseListener;
 import com.vanniktech.emoji.listeners.OnSoftKeyboardOpenListener;
 
-import io.codetail.animation.SupportAnimator;
-import io.codetail.animation.ViewAnimationUtils;
 
 public class MessageActivity extends AppCompatActivity {
 
 
     ActivityMessageBinding activityMessageBinding;
-    SupportAnimator animator_reverse;
-    boolean hidden = true;
-    SupportAnimator animator;
-    int cx, cy, radius;
-
     private EmojiPopup emojiPopup;
     public static boolean isVoice = true;
 
@@ -61,9 +58,14 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
 
-        activityMessageBinding.reveal.setVisibility(View.INVISIBLE);
+        activityMessageBinding.profileButton.setOnClickListener(view -> {
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            this, view, "DetailActivity:image");
+            Intent intent = new Intent(this, ProfileActivity.class);
+            ActivityCompat.startActivity(this, intent, options.toBundle());
 
-
+        });
         activityMessageBinding.messageText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -100,57 +102,7 @@ public class MessageActivity extends AppCompatActivity {
         activityMessageBinding.toolBarBackBtn.setOnClickListener(view -> {
             finish();
         });
-        activityMessageBinding.fullFrame.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                if (animator != null) {
-                    animator_reverse = animator.reverse();
-                    Log.i("Touch Called", "Touch");
-
-                    if (hidden == false) {
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                            animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart() {
-
-                                }
-
-                                @Override
-                                public void onAnimationEnd() {
-                                    activityMessageBinding.reveal.setVisibility(View.INVISIBLE);
-                                    hidden = true;
-
-                                }
-
-                                @Override
-                                public void onAnimationCancel() {
-
-                                }
-
-                                @Override
-                                public void onAnimationRepeat() {
-
-                                }
-                            });
-                            animator_reverse.start();
-                        } else {
-                            Animator anim = android.view.ViewAnimationUtils.createCircularReveal(activityMessageBinding.reveal, cx, cy, radius, 0);
-                            anim.addListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    super.onAnimationEnd(animation);
-                                    activityMessageBinding.reveal.setVisibility(View.INVISIBLE);
-                                    hidden = true;
-                                }
-                            });
-                            anim.start();
-                        }
-                    }
-                }
-                return false;
-            }
-        });
         activityMessageBinding.toolbarProfileImage.setImageDrawable(getResources().getDrawable(R.drawable.default_image));
         activityMessageBinding.emoji.setOnClickListener(view -> emojiPopup.toggle());
         setUpEmojiPopup();
@@ -203,72 +155,26 @@ public class MessageActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_clip: {
 
-                cx = (activityMessageBinding.reveal.getLeft() + activityMessageBinding.reveal.getRight());
-                cy = activityMessageBinding.reveal.getTop();
-                radius = Math.max(activityMessageBinding.reveal.getWidth(), activityMessageBinding.reveal.getHeight());
-
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-
-
-                    animator =
-                            ViewAnimationUtils.createCircularReveal(activityMessageBinding.reveal, cx, cy, 0, radius);
-                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animator.setDuration(200);
-
-
-                    if (hidden) {
-                        activityMessageBinding.reveal.setVisibility(View.VISIBLE);
-                        animator.start();
-                        hidden = false;
-                    } else {
-                        animator_reverse = animator.reverse();
-                        animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
+                new BottomSheet.Builder(this)
+                        .setSheet(R.menu.message)
+                        .setTitle("Choose Action")
+                        .setListener(new BottomSheetListener() {
                             @Override
-                            public void onAnimationStart() {
+                            public void onSheetShown(@NonNull BottomSheet bottomSheet) {
 
                             }
 
                             @Override
-                            public void onAnimationEnd() {
-                                activityMessageBinding.reveal.setVisibility(View.INVISIBLE);
-                                hidden = true;
+                            public void onSheetItemSelected(@NonNull BottomSheet bottomSheet, MenuItem menuItem) {
 
                             }
 
                             @Override
-                            public void onAnimationCancel() {
+                            public void onSheetDismissed(@NonNull BottomSheet bottomSheet, @DismissEvent int i) {
 
                             }
-
-                            @Override
-                            public void onAnimationRepeat() {
-
-                            }
-                        });
-                        animator_reverse.start();
-
-                    }
-                } else {
-                    if (hidden) {
-                        Animator anim = android.view.ViewAnimationUtils.createCircularReveal(activityMessageBinding.reveal, cx, cy, 0, radius);
-                        activityMessageBinding.reveal.setVisibility(View.VISIBLE);
-                        anim.start();
-                        hidden = false;
-
-                    } else {
-                        Animator anim = android.view.ViewAnimationUtils.createCircularReveal(activityMessageBinding.reveal, cx, cy, radius, 0);
-                        anim.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                activityMessageBinding.reveal.setVisibility(View.INVISIBLE);
-                                hidden = true;
-                            }
-                        });
-                        anim.start();
-                    }
-                }
-
+                        })
+                        .show();
                 return true;
             }
         }

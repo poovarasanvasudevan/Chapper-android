@@ -2,4 +2,13 @@
     <string name="app_name">Chapper</string>
     <string name="visible">visible</string>
     <string name="gone">gone</string>
+
+    <array name="messageMenuItems">
+        <item>Gallery</item>
+        <item>Photos</item>
+        <item>Videos</item>
+        <item>Location</item>
+        <item>Call</item>
+        <item>Video Call</item>
+    </array>
 </resources>

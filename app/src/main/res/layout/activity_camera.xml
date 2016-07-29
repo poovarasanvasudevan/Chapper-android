@@ -70,8 +70,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_weight="1"
+                    android:id="@+id/camChange"
+                    android:tint="@color/md_white_1000"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_camera_front" />
+                    android:src="@drawable/ic_switch_camera" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/captureBtn"

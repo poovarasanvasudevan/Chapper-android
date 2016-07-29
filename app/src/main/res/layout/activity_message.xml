@@ -51,6 +51,7 @@
                         app:mrl_rippleOverlay="true">
 
                         <LinearLayout
+                            android:id="@+id/profileButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical">
@@ -72,7 +73,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:ellipsize="marquee"
+                                    android:ellipsize="end"
+                                    android:singleLine="true"
                                     android:text="Poovarasan Vasudevan" />
 
                                 <TextView
@@ -81,7 +83,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:ellipsize="marquee"
+                                    android:ellipsize="end"
+                                    android:singleLine="true"
                                     android:text="Online" />
                             </LinearLayout>
                         </LinearLayout>
@@ -90,104 +93,21 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
-        <io.codetail.widget.RevealFrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/appbar">
-
-            <LinearLayout
-                android:id="@+id/reveal"
-                android:layout_width="match_parent"
-                android:background="@drawable/shadow_125025"
-                android:layout_marginLeft="-4dp"
-                android:layout_marginRight="-4dp"
-                android:layout_marginTop="-4dp"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:background="@drawable/ic_video_camera" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Gallery" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:background="@drawable/ic_video_camera" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Video" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:background="@drawable/ic_video_camera" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Photo" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </io.codetail.widget.RevealFrameLayout>
-
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:reverseLayout="true"
             android:layout_above="@+id/messageBar"
-            android:layout_below="@+id/appbar" />
+            android:layout_below="@+id/appbar"
+            app:reverseLayout="true" />
 
         <RelativeLayout
             android:id="@+id/messageBar"
             android:layout_width="match_parent"
             android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-4dp"
             android:layout_marginLeft="-4dp"
             android:layout_marginRight="-4dp"
-            android:layout_marginBottom="-4dp"
-            android:layout_alignParentBottom="true"
             android:background="@drawable/shadow_125025">
 
             <RelativeLayout
@@ -212,11 +132,11 @@
 
                         <ImageButton
                             android:id="@+id/emoji"
-                            android:tint="?colorPrimary"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:src="@drawable/ic_smile_o" />
+                            android:src="@drawable/ic_smile_o"
+                            android:tint="?colorPrimary" />
 
                     </com.poovarasanv.chapper.widget.Ripple>
 
@@ -244,7 +164,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:src="@drawable/ic_camera_alt" />
+                            android:src="@drawable/ic_camera_alt"
+                            android:tint="?colorPrimary" />
 
                     </com.poovarasanv.chapper.widget.Ripple>
 
@@ -253,9 +174,9 @@
 
 
             <com.poovarasanv.chapper.widget.Ripple
+                android:id="@+id/sendBtnRipple"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/sendBtnRipple"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 app:mrl_rippleColor="#000"
