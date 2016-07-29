@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/photos"
+        android:icon="@drawable/ic_image"
+        android:title="Share Photos" />
+
+    <item
+        android:id="@+id/upload"
+        android:icon="@drawable/ic_videocam"
+        android:title="Share Videos" />
+
+    <item
+        android:id="@+id/location"
+        android:icon="@drawable/ic_map"
+        android:title="Share Location" />
+
+
+    <item
+        android:id="@+id/voice"
+        android:icon="@drawable/ic_mic"
+        android:title="Share Voice" />
+
+    <item
+        android:id="@+id/copy"
+        android:icon="@drawable/ic_call"
+        android:title="Call" />
+
+    <item
+        android:id="@+id/print"
+        android:icon="@drawable/ic_video_call"
+        android:title="Video Call" />
+
+    <item
+        android:id="@+id/block"
+        android:icon="@drawable/ic_block"
+        android:title="Block" />
+
+</menu>
