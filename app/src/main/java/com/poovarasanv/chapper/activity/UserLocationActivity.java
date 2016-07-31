@@ -1,40 +1,41 @@
 package com.poovarasanv.chapper.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.poovarasanv.chapper.R;
 import com.poovarasanv.chapper.databinding.ActivityUserLocationBinding;
 
-import org.osmdroid.api.IMapController;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-public class UserLocationActivity extends AppCompatActivity implements LocationListener {
+public class UserLocationActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
     ActivityUserLocationBinding activityUserLocationBinding;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
+    GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityUserLocationBinding = DataBindingUtil.setContentView(this, R.layout.activity_user_location);
-        activityUserLocationBinding.map.setTileSource(TileSourceFactory.MAPNIK);
-        activityUserLocationBinding.map.setMultiTouchControls(true);
-        activityUserLocationBinding.map.setFlingEnabled(true);
+
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -49,7 +50,6 @@ public class UserLocationActivity extends AppCompatActivity implements LocationL
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
 
-        setSupportActionBar(activityUserLocationBinding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -57,13 +57,12 @@ public class UserLocationActivity extends AppCompatActivity implements LocationL
 
     @Override
     public void onLocationChanged(Location location) {
-        IMapController mapController = activityUserLocationBinding.map.getController();
-        mapController.setZoom(22);
-        GeoPoint startPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-        mapController.setCenter(startPoint);
 
-        activityUserLocationBinding.map.getOverlays().add(new MyLocationNewOverlay(new GpsMyLocationProvider(UserLocationActivity.this), activityUserLocationBinding.map));
-
+        if (map != null) {
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(location.getLatitude(), location.getLongitude()))
+                    .title("Marker"));
+        }
     }
 
     @Override
@@ -79,5 +78,10 @@ public class UserLocationActivity extends AppCompatActivity implements LocationL
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
     }
 }

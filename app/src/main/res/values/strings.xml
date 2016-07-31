@@ -3,6 +3,7 @@
     <string name="visible">visible</string>
     <string name="gone">gone</string>
 
+    <string name="api_key">AIzaSyCngs6CIRrUjx-o_RAXkEG1JNJT_OwCYXI</string>
     <array name="messageMenuItems">
         <item>Gallery</item>
         <item>Photos</item>

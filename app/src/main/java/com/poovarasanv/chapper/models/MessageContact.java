@@ -1,9 +1,11 @@
 package com.poovarasanv.chapper.models;
 
+import com.poovarasanv.chapper.pojo.IDClass;
+
 /**
  * Created by poovarasanv on 25/7/16.
  */
-public class MessageContact {
+public class MessageContact extends IDClass {
     long id;
     String name;
     String number;
@@ -14,7 +16,7 @@ public class MessageContact {
     }
 
     public MessageContact(long id, String name, String number, String image, String message) {
-        this.id = id;
+        ID = id;
         this.name = name;
         this.number = number;
         this.image = image;

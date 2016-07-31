@@ -6,8 +6,8 @@ import java.util.Date;
 /**
  * Created by poovarasanv on 19/7/16.
  */
-public class Message implements Comparable<Message> {
-    long ID;
+public class Message extends IDClass implements Comparable<Message> {
+
     String fromUser;
     String toUser;
     String message;
@@ -17,8 +17,8 @@ public class Message implements Comparable<Message> {
     public Message() {
     }
 
-    public Message(long ID, String fromUser, String toUser, String message, Date createdAt, boolean status) {
-        this.ID = ID;
+    public Message(long id, String fromUser, String toUser, String message, Date createdAt, boolean status) {
+        ID = id;
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.message = message;

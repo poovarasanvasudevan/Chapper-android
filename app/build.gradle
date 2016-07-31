@@ -32,7 +32,10 @@ repositories {
         url "https://jitpack.io"
     }
 
-    maven { url "https://dl.bintray.com/hani-momanii/maven"}
+    maven { url "https://dl.bintray.com/hani-momanii/maven" }
+    maven {
+        url 'http://dl.bintray.com/raphaelbussa/maven'
+    }
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -45,7 +48,7 @@ dependencies {
     compile 'com.minimize.android:rxrecycler-adapter:1.2.2'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'io.reactivex:rxandroid:1.1.0'
-    compile ('com.github.nkzawa:socket.io-client:0.3.0') {
+    compile('com.github.nkzawa:socket.io-client:0.3.0') {
         exclude group: 'org.json', module: 'json'
     }
     compile 'com.sromku:simple-storage:1.2.0'
@@ -54,6 +57,8 @@ dependencies {
     compile 'com.vanniktech:emoji:0.3.0'
     compile 'com.github.Kennyc1012:BottomSheet:2.3.1'
     compile 'org.osmdroid:osmdroid-android:5.2@aar'
+    compile 'com.google.android.gms:play-services-maps:9.2.1'
+    compile 'com.google.android.gms:play-services-location:9.2.1'
 }
 retrolambda {
     jvmArgs '-noverify'

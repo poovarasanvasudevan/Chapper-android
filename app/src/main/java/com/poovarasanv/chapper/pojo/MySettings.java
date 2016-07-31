@@ -6,7 +6,9 @@ import java.util.Date;
 /**
  * Created by poovarasanv on 19/7/16.
  */
-public class MySettings  {
+public class MySettings extends IDClass  {
+
+    long id;
     String key;
     String value;
     Date createdDate;
@@ -14,7 +16,8 @@ public class MySettings  {
     public MySettings() {
     }
 
-    public MySettings(String key, String value, Date createdDate) {
+    public MySettings(long id,String key, String value, Date createdDate) {
+        ID = id;
         this.key = key;
         this.value = value;
         this.createdDate = createdDate;

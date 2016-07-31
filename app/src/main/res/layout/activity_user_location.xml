@@ -8,25 +8,17 @@
         tools:context="com.poovarasanv.chapper.activity.UserLocationActivity">
 
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="?colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-
-        <org.osmdroid.views.MapView
+        <fragment
             android:id="@+id/map"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@+id/toolbar" />
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="53dp"
-            android:layout_below="@+id/toolbar"
             android:layout_margin="10dp"
             android:orientation="horizontal">
 

@@ -106,7 +106,8 @@ public class MessageFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        subscription.unsubscribe();
+        if (subscription.isUnsubscribed())
+            subscription.unsubscribe();
         super.onDestroy();
     }
 

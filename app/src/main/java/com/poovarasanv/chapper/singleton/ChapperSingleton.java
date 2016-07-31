@@ -1,6 +1,5 @@
 package com.poovarasanv.chapper.singleton;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -19,7 +18,6 @@ import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -28,27 +26,20 @@ import com.poovarasanv.chapper.activity.HomeActivity;
 import com.poovarasanv.chapper.models.Contact;
 import com.poovarasanv.chapper.models.MessageContact;
 import com.poovarasanv.chapper.pojo.Message;
+import com.poovarasanv.chapper.pojo.MySettings;
 import com.poovarasanv.chapper.receivers.NotificationDismissedReceiver;
 import com.sromku.simple.storage.SimpleStorage;
-import com.sromku.simple.storage.SimpleStorageConfiguration;
 import com.sromku.simple.storage.Storage;
-import com.sromku.simple.storage.helpers.OrderType;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
 
 import iBoxDB.LocalServer.DB;
 
@@ -62,14 +53,33 @@ public class ChapperSingleton {
     private static int lastContactId = 0;
     private static Context context;
 
+    private static final String SETTING = "Settings";
+    private static final String MESSAGE = "Message";
+    private static final String CONTACT = "Contact";
+
+
     public static void init(Context context) {
         ChapperSingleton.context = context;
+    }
+
+    public static AppExternalFileWriter getWriter() {
+        return new AppExternalFileWriter(context);
+    }
+
+    public static DB getDB() {
+
+        DB db = new DB();
+        db.getConfig().ensureTable(MySettings.class, SETTING, "ID");
+        db.getConfig().ensureTable(Message.class, MESSAGE, "ID");
+        db.getConfig().ensureTable(Contact.class, CONTACT, "ID");
+
+        return db;
     }
 
     public static Socket getSocket(Context context) {
         if (socket == null) {
             try {
-                socket = IO.socket("http://10.0.2.2:3001");
+                socket = IO.socket("http://10.0.2.2:3000");
 
                 Log.i("Request Socket", "Sending Request");
                 if (socket.connected() == false) {
@@ -212,46 +222,37 @@ public class ChapperSingleton {
 
     public static void writeLogin(String phoneNumber) {
 
-        if (getStorage().isFileExist("Chapper/data", "login.txt") == false) {
-            getStorage().createFile("Chapper/data", "login.txt", phoneNumber);
-        }
+        DB.AutoBox dbBox = getDB().open();
+        dbBox.insert(SETTING, new MySettings(1, "login", phoneNumber, new GregorianCalendar().getTime()));
+        getDB().close();
+
     }
 
     public static boolean isLoggedIn() {
-        if (getStorage().isFileExist("Chapper/data", "login.txt")) {
-            String content = getStorage().readTextFile("Chapper/data", "login.txt");
-            if (content != "") {
-                return true;
-            } else {
-                return false;
-            }
+        DB.AutoBox dbBox = getDB().open();
+        MySettings loginSettings = dbBox.get(MySettings.class, SETTING, Long.parseLong("1"));
+
+        if (loginSettings == null)
+            return false;
+
+        if (loginSettings != null || loginSettings.getValue() != null || loginSettings.getValue() != "") {
+            return true;
         } else {
             return false;
         }
     }
 
-    public static String getDate() {
-        Date date = new Date();
-        return date.getYear() + "-" + date.getMonth() + 1 + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-
-    }
-
-    public static Date parseDate(String date) {
-
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-
-            return null;
-        }
+    public static Date getDate() {
+        return new GregorianCalendar().getTime();
     }
 
     public static void saveOutgoingMessage(String to, String message) {
         JSONObject object = new JSONObject();
         try {
+            DB.AutoBox dbBox = getDB().open();
             object.put("user", to);
             object.put("content", message);
+            long msgId = dbBox.newId();
 
 //
             //{"to":"9789356631","content":"this is a demo message","from":"9789356631","messageId":33,"date":"Thu Jul 21 05:49:28 GMT 2016","status":true}
@@ -260,23 +261,24 @@ public class ChapperSingleton {
             outgoing.put("to", to);
             outgoing.put("from", getNumber());
             outgoing.put("content", message);
-            outgoing.put("messageId", getMessageLength(to));
+            outgoing.put("messageId", msgId);
             outgoing.put("date", getDate());
             outgoing.put("status", true);
 
 
-            if (getStorage().isFileExist("Chapper/data/messages", to + ".txt")) {
+            Message msg = new Message();
+            msg.setID(msgId);
+            msg.setCreatedAt(getDate());
+            msg.setFromUser(getNumber());
+            msg.setToUser(to);
+            msg.setStatus(true);
+            msg.setMessage(message);
+            dbBox.insert(MESSAGE, msg);
 
-                JSONArray jsonArray = new JSONArray(getStorage().readTextFile("Chapper/data/messages", to + ".txt"));
-                jsonArray.put(outgoing);
+            saveUser(to);
 
-                getStorage().deleteFile("Chapper/data/messages", to + ".txt");
-                getStorage().createFile("Chapper/data/messages", to + ".txt", jsonArray.toString());
-            } else {
-                JSONArray jsonArray = new JSONArray();
-                jsonArray.put(outgoing);
-                getStorage().createFile("Chapper/data/messages", to + ".txt", jsonArray.toString());
-            }
+            getDB().close();
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -284,103 +286,48 @@ public class ChapperSingleton {
         getSocket(context).emit("message", object.toString());
     }
 
-    public static int getMessageLength(String to) {
-        if (getStorage().isFileExist("Chapper/data/messages", to + ".txt")) {
-            try {
-                JSONArray jsonArray = new JSONArray(getStorage().readTextFile("Chapper/data/messages", to + ".txt"));
-                return jsonArray.length();
-            } catch (JSONException e) {
-                e.printStackTrace();
-
-                return 0;
-            }
-        } else {
-            return 0;
-        }
-    }
-
     public static void saveIncommingMessage(JSONObject jsonObject) {
-        if (getStorage().isFileExist("Chapper/data/messages", jsonObject.optString("from") + ".txt")) {
-            try {
+        DB.AutoBox dbBox = getDB().open();
+        long msgId = dbBox.newId();
+        Message msg = new Message();
+        msg.setID(msgId);
+        msg.setStatus(true);
+        msg.setFromUser(jsonObject.optString("from"));
+        msg.setCreatedAt(getDate());
+        msg.setMessage(jsonObject.optString("content"));
+        msg.setToUser(getNumber());
 
-                String from = jsonObject.optString("from");
+        dbBox.insert(MESSAGE, msg);
 
-                Date date = new Date();
-                jsonObject.put("date", getDate());
-                jsonObject.put("status", true);
+        saveUser(jsonObject.optString("from"));
 
-                JSONArray jsonArray = new JSONArray(getStorage().readTextFile("Chapper/data/messages", from + ".txt"));
-                jsonArray.put(jsonObject);
+        getDB().close();
 
-                getStorage().deleteFile("Chapper/data/messages", from + ".txt");
-                getStorage().createFile("Chapper/data/messages", from + ".txt", jsonArray.toString());
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-
-            String from = jsonObject.optString("from");
-
-            Date date = new Date();
-
-            try {
-                jsonObject.put("date", getDate());
-                jsonObject.put("status", true);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            JSONArray jsonArray = new JSONArray();
-            jsonArray.put(jsonObject);
-            getStorage().createFile("Chapper/data/messages", from + ".txt", jsonArray.toString());
-        }
     }
 
     public static String getNumber() {
-        if (getStorage().isFileExist("Chapper/data", "login.txt")) {
-            String content = getStorage().readTextFile("Chapper/data", "login.txt");
-            if (content != "") {
-                return content;
-            } else {
-                return null;
-            }
+        DB.AutoBox dbBox = getDB().open();
+        MySettings loginSetting = dbBox.get(MySettings.class, SETTING, 1L);
+
+        getDB().close();
+        if (loginSetting.getValue() != null || loginSetting.getValue() != "") {
+            return loginSetting.getValue();
         } else {
             return null;
         }
+
+
     }
 
     public static List<Message> getAllMessages(String to) {
-        if (getStorage().isFileExist("Chapper/data/messages", to + ".txt")) {
-            List<Message> m = new ArrayList<>();
-            try {
-                JSONArray jsonArray = new JSONArray(getStorage().readTextFile("Chapper/data/messages", to + ".txt"));
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject obj = jsonArray.optJSONObject(i);
-                    Message message = new Message();
-                    message.setToUser(to);
-                    message.setFromUser(obj.optString("from"));
-                    message.setMessage(obj.optString("content"));
-                    message.setID(obj.optInt("messageId"));
-                    message.setStatus(obj.optBoolean("status"));
-
-                    message.setCreatedAt(parseDate(obj.optString("date")));
-
-                    m.add(message);
-                }
-
-                return m;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-
-                return null;
-            }
-
-        } else {
-            return null;
+        List<Message> m = new ArrayList<>();
+        DB.AutoBox dbBox = getDB().open();
+        for (Message msg : dbBox.select(Message.class, "from ? where fromUser == ? and toUser == ? or fromUser == ? and toUser == ?", MESSAGE, getNumber(), to, to, getNumber())) {
+            m.add(msg);
         }
+        getDB().close();
+
+        return m;
     }
 
     public static Notification getNotification(String title, String message) {
@@ -482,19 +429,36 @@ public class ChapperSingleton {
 
     public static List<MessageContact> getAllMessageUser() {
         List<MessageContact> messageUser = new ArrayList<>();
-        List<File> allUser = storage.getFiles("Chapper/data/messages", OrderType.DATE);
 
-        for (File f : allUser) {
-            MessageContact c = new MessageContact();
-            c.setName(getContactName(f.getName().replace(".txt", "")));
-            c.setNumber(f.getName().replace(".txt", ""));
-            c.setImage(getContactImage(f.getName()));
-            List<Message> messages = getAllMessages(f.getName().replace(".txt", ""));
-            c.setMessage(messages.get(messages.size() - 1).getMessage().length() > 50 ? messages.get(messages.size() - 1).getMessage().substring(0, 45) + "..." : messages.get(messages.size() - 1).getMessage());
-            messageUser.add(c);
+        DB.AutoBox dbBox = getDB().open();
+        for (Contact c : dbBox.select(Contact.class, "from Contact")) {
+            messageUser.add(new MessageContact(
+                    c.getId(),
+                    getContactName(c.getNumber()),
+                    c.getNumber(),
+                    getContactImage(c.getNumber()),
+                    ""
+            ));
         }
 
         return messageUser;
+    }
+
+    public static void saveUser(String number) {
+        DB.AutoBox dbBox = getDB().open();
+        int size = 0;
+        for (Contact c : dbBox.select(Contact.class, "from Contact where number == ?", number)) {
+            size++;
+        }
+
+        if (size == 0) {
+            Contact contact = new Contact();
+            contact.setId(dbBox.newId());
+            contact.setName(number);
+            contact.setNumber(number);
+            dbBox.insert(CONTACT, contact);
+        }
+        getDB().close();
     }
 
     public static void saveActiveUsers(JSONArray array) {
@@ -506,11 +470,6 @@ public class ChapperSingleton {
                     contactString.put(number);
                 }
             }
-
-            if (getStorage().isFileExist("Chapper/data", "users.txt")) {
-                getStorage().deleteFile("Chapper/data", "users.txt");
-            }
-            getStorage().createFile("Chapper/data", "users.txt", contactString.toString());
 
 
         } catch (JSONException e) {
