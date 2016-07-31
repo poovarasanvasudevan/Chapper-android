@@ -71,23 +71,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             next();
         }
-
-//        next();
-
-//
-//                        Manifest.permission.INTERNET,
-//                        Manifest.permission.RECEIVE_BOOT_COMPLETED,
-//                        Manifest.permission.ACCESS_NETWORK_STATE,
-//                        Manifest.permission.READ_CONTACTS,
-//                        Manifest.permission.READ_EXTERNAL_STORAGE,
-//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                        Manifest.permission.CAMERA,
-//                        Manifest.permission.ACCESS_COARSE_LOCATION,
-//                        Manifest.permission.ACCESS_FINE_LOCATION,
-//                        Manifest.permission.ACCESS_WIFI_STATE,
-//                        Manifest.permission.ACCESS_NETWORK_STATE
-
-
     }
 
 

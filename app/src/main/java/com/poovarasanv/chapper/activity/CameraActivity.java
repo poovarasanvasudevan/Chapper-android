@@ -11,12 +11,9 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.poovarasanv.chapper.MainActivity;
 import com.poovarasanv.chapper.R;
 import com.poovarasanv.chapper.databinding.ActivityCameraBinding;
-import com.poovarasanv.chapper.databinding.ActivityLoginBinding;
 import com.ragnarok.rxcamera.RxCamera;
 import com.ragnarok.rxcamera.RxCameraData;
 import com.ragnarok.rxcamera.config.RxCameraConfig;
@@ -27,11 +24,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -108,7 +103,7 @@ public class CameraActivity extends AppCompatActivity {
 
         openCamera(1);
 
-        camera.action().flashAction(true);
+//        camera.action().flashAction(true);
 
         activityCameraBinding.camChange.setOnClickListener(new View.OnClickListener() {
             @Override

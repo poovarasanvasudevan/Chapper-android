@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import com.poovarasanv.chapper.models.Contact;
 import com.poovarasanv.chapper.singleton.ChapperSingleton;
 
 import java.util.List;
-
 
 
 /**
@@ -41,6 +39,7 @@ public class ContactsFragment extends Fragment {
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         fragmentContactsBinding.allContacts.setLayoutManager(linearLayoutManager);
+        //   fragmentContactsBinding.allContacts.addItemDecoration(new ItemDecoration(getActivity()));
 
         new ContactFetcher().execute();
 
