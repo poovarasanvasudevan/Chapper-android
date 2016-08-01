@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.search: {
                 JSONObject object = new JSONObject();
                 try {
-                    object.put("user", "9659359536");
+                    object.put("user", "9659389536");
                     object.put("content", "Hello 9659389536 ");
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -10,7 +10,10 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,7 +28,7 @@ public class UserLocationActivity extends AppCompatActivity implements LocationL
     ActivityUserLocationBinding activityUserLocationBinding;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
-    GoogleMap map;
+    GoogleMap map = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,12 @@ public class UserLocationActivity extends AppCompatActivity implements LocationL
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        if (map != null) {
+            map.setMyLocationEnabled(true);
+            map.getUiSettings().setZoomControlsEnabled(true);
+        }
+
+
     }
 
     @Override
@@ -62,6 +71,9 @@ public class UserLocationActivity extends AppCompatActivity implements LocationL
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(location.getLatitude(), location.getLongitude()))
                     .title("Marker"));
+
+
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13.0f));
         }
     }
 
@@ -83,5 +95,21 @@ public class UserLocationActivity extends AppCompatActivity implements LocationL
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

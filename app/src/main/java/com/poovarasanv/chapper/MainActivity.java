@@ -31,21 +31,6 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         activityMainBinding.setProgressStatus(View.VISIBLE);
 
-        /**
-         *     <uses-permission android:name="android.permission.INTERNET" />
-         <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-         <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-         <uses-permission android:name="android.permission.READ_CONTACTS" />
-         <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-         <uses-permission android:name="android.permission.CAMERA" />
-
-         <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-         <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-         <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-         <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-         * */
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (
                     ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
@@ -96,19 +81,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void next() {
-        if (ChapperSingleton.isLoggedIn()) {
 
 
-            Intent i = new Intent(MainActivity.this, HomeActivity.class);
-            startActivity(i);
-            finish();
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
+        finish();
 
-        } else {
 
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(i);
-            finish();
-
-        }
     }
 }

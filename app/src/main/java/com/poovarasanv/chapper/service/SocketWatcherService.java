@@ -1,13 +1,17 @@
 package com.poovarasanv.chapper.service;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -55,8 +59,17 @@ public class SocketWatcherService extends Service {
         public void call(Object... args) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 public void run() {
-                    if (ChapperSingleton.isLoggedIn()) {
-                        socket.emit("phonenumber", ChapperSingleton.getNumber());
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                            if (ChapperSingleton.isLoggedIn()) {
+                                socket.emit("phonenumber", ChapperSingleton.getNumber());
+                            }
+                        }
+                    } else {
+                        if (ChapperSingleton.isLoggedIn()) {
+                            socket.emit("phonenumber", ChapperSingleton.getNumber());
+                        }
                     }
                 }
             });
@@ -91,6 +104,7 @@ public class SocketWatcherService extends Service {
                     try {
                         JSONObject jsonObject = new JSONObject(args[0].toString());
 
+                        Toast.makeText(getApplicationContext(), jsonObject.toString(), Toast.LENGTH_LONG);
                         ChapperSingleton.saveIncommingMessage(jsonObject);
                         String from = jsonObject.optString("from");
 

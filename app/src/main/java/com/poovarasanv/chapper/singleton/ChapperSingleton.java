@@ -79,7 +79,7 @@ public class ChapperSingleton {
     public static Socket getSocket(Context context) {
         if (socket == null) {
             try {
-                socket = IO.socket("http://10.0.2.2:3000");
+                socket = IO.socket("http://10.0.2.2:3001");
 
                 Log.i("Request Socket", "Sending Request");
                 if (socket.connected() == false) {

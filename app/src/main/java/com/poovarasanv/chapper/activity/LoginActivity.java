@@ -30,6 +30,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
+        if (ChapperSingleton.isLoggedIn()) {
+            Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(i);
+            finish();
+        }
+
         activityLoginBinding.setLicenseError(View.GONE);
         activityLoginBinding.setMobileNumberError(View.GONE);
         socket = ChapperSingleton.getSocket(getApplicationContext());
