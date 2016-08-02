@@ -12,17 +12,22 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/md_black_1000"
+        android:background="#222"
         tools:context="com.poovarasanv.chapper.activity.ImageViewerActivity">
 
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:id="@+id/imageFull"
+            android:layout_height="match_parent" />
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:alpha="0.45"
+            android:alpha="0.5"
             android:id="@+id/toolbar"
-            android:background="@color/md_black_1000"
+            android:background="#000"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
     </RelativeLayout>
 </layout>

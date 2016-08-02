@@ -1,5 +1,6 @@
 package com.poovarasanv.chapper.singleton;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -16,6 +17,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -476,4 +478,52 @@ public class ChapperSingleton {
             e.printStackTrace();
         }
     }
+    public static List<String> getAllShownImagesPath(Activity activity) {
+        Uri uri;
+        Cursor cursor;
+        int column_index_data, column_index_folder_name;
+        List<String> listOfAllImages = new ArrayList<String>();
+        String absolutePathOfImage = null;
+        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        String[] projection = { MediaStore.MediaColumns.DATA,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+
+        cursor = activity.getContentResolver().query(uri, projection, null,
+                null, null);
+
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        column_index_folder_name = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        while (cursor.moveToNext()) {
+            absolutePathOfImage = cursor.getString(column_index_data);
+
+            listOfAllImages.add(absolutePathOfImage);
+        }
+        return listOfAllImages;
+    }
+
+
+
+    public static Bitmap resizeBitmap(String photoPath, int targetW, int targetH) {
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        int scaleFactor = 1;
+        if ((targetW > 0) || (targetH > 0)) {
+            scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+        }
+
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true; //Deprecated API 21
+
+        return BitmapFactory.decodeFile(photoPath, bmOptions);
+    }
+
+
+
 }

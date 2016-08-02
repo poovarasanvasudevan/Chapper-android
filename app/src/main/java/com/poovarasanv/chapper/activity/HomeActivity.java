@@ -117,6 +117,14 @@ public class HomeActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 break;
             }
+
+            case R.id.newInvite: {
+
+                Intent intent = new Intent(this, ImagePickerActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
